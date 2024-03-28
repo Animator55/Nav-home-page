@@ -1,5 +1,4 @@
 import React, { FormEvent } from "react"
-import getName from "../logic/getNameFromURL"
 
 type Props = {confirm: Function}
 
@@ -10,7 +9,11 @@ export default function PopUp ({confirm}: Props){
         e.preventDefault()
         let input = e.currentTarget[0] as HTMLInputElement
         let url = input.value
-        if(!getName(url)) return setError("Invalid URL")
+        console.log(url.search("."))
+        if(url.search(".") === -1) return setError("Invalid URL")
+
+        if(url.search("https://") === -1) url = "https://"+ url
+
         let input2 = input.nextSibling as HTMLInputElement
         let background = input2.value
 
@@ -21,7 +24,7 @@ export default function PopUp ({confirm}: Props){
       <form onSubmit={handler} className='pop'>
         <h3>New Shortcut</h3>
         <div>{error}</div>
-        <input name='url' placeholder="https://" />
+        <input name='url' placeholder="https://"/>
         <input name="color" type='color'/>
         <button type='submit'>Confirm</button>
       </form>

@@ -1,3 +1,9 @@
+body {
+  margin: 0;
+  --cblack: #000000;
+
+}
+
 img {
   width: 48px;
   height: 48px;
@@ -9,4 +15,38 @@ img {
 
 .rec-span.expanded {
   display: block;
+}
+
+.input-zone {
+  display: flex;
+  align-items: center;
+}
+.input-zone > form {
+  
+}
+
+
+/**/
+
+.back-pop {
+  position: fixed;
+  backdrop-filter: blur(1px);
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pop {
+  background-color: var(--cblack);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 700px) {
+  .pop {
+    width: 85vw;
+    padding: 2rem 0;
+  }
 }

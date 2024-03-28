@@ -1,7 +1,7 @@
-import React, { FormEvent } from 'react'
+import React from 'react'
 import './App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faMicrophone, faPlus } from '@fortawesome/free-solid-svg-icons';
 import PopUp from './components/PopUp';
 import getName from './logic/getNameFromURL';
 
@@ -38,30 +38,39 @@ export default function App() {
   const [popUp, setPopUp] = React.useState(false)
 
   const SearchInput = ()=>{
-    const submit = (e: FormEvent)=>{
-      e.preventDefault()
-
-      console.log(e)
-    }
-
-    return <form className='input-zone' onSubmit={submit}>
-      <input placeholder='Search something or URL'/>
-    </form>
+    return <div className='input-zone'>
+      <form action="http://google.com/search">
+        <input name='q' placeholder='Search something or URL'/>
+        <input type="hidden" name="sitesearch"/>
+      </form>
+      <button onClick={()=>{console.log("record")}}>
+        <FontAwesomeIcon icon={faMicrophone}/>
+      </button>
+    </div>
   }
 
   const Recommended = ()=>{
+    const clickRec = (e: React.MouseEvent, url: string)=>{
+      let button = e.target as HTMLButtonElement
+      if(button.className === "rec-button") window.location.replace(url)
+    }
+
     const openSpan = (e: React.MouseEvent<HTMLButtonElement>)=>{
       let button = e.currentTarget as HTMLButtonElement
       let span = button.lastChild as HTMLSpanElement
       span?.classList.toggle("expanded")
     }
 
-
     return <div>
       {urls.map((obj, i)=>{
         let filteredName = getName(obj.url)
 
-        return <button key={"rec-" + i} onClick={()=>{console.log(obj.url)}} style={{backgroundColor: obj.background}}>
+        return <button 
+          className='rec-button' 
+          key={"rec-" + i} 
+          onClick={(e)=>{clickRec(e, obj.url)}} 
+          style={{backgroundColor: obj.background}}
+        >
           {filteredName}
           <button onClick={openSpan}>
             <FontAwesomeIcon icon={faEllipsisVertical}/>
@@ -76,7 +85,8 @@ export default function App() {
     </div>
   }
 
-  // 
+  // functions
+
   const addUrl = (url:string, background:string) =>{
     setUrls([...urls, {url: url, background: background}])
     setPopUp(false)
@@ -86,6 +96,5 @@ export default function App() {
     {popUp && <PopUp confirm={addUrl}/>}
     <SearchInput/>
     <Recommended/>
-    <a href="https://google.com">dfasfs</a>
   </section>
 }
