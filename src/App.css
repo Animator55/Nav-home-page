@@ -4,9 +4,8 @@ body {
 
 }
 
-img {
-  width: 48px;
-  height: 48px;
+.rec-button {
+  
 }
 
 .rec-span {
@@ -21,10 +20,6 @@ img {
   display: flex;
   align-items: center;
 }
-.input-zone > form {
-  
-}
-
 
 /**/
 
@@ -49,4 +44,10 @@ img {
     width: 85vw;
     padding: 2rem 0;
   }
+}
+
+/***/
+
+.recording {
+  color: red
 }

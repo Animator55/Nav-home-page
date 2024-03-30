@@ -1,9 +1,10 @@
 import React from 'react'
 import './App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faMicrophone, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faPlus } from '@fortawesome/free-solid-svg-icons';
 import PopUp from './components/PopUp';
 import getName from './logic/getNameFromURL';
+import Dictaphone from './components/Dictaphone';
 
 type links = {
   url: string
@@ -40,24 +41,25 @@ export default function App() {
   const SearchInput = ()=>{
     return <div className='input-zone'>
       <form action="http://google.com/search">
-        <input name='q' placeholder='Search something or URL'/>
+        <input id='search-input' name='q' placeholder='Search something or URL'/>
         <input type="hidden" name="sitesearch"/>
       </form>
-      <button onClick={()=>{console.log("record")}}>
-        <FontAwesomeIcon icon={faMicrophone}/>
-      </button>
+      <Dictaphone sendText={(text: string)=>{
+        let input = document.getElementById("search-input") as HTMLInputElement
+        input.value = text
+      }}/>
     </div>
   }
 
   const Recommended = ()=>{
     const clickRec = (e: React.MouseEvent, url: string)=>{
-      let button = e.target as HTMLButtonElement
-      if(button.className === "rec-button") window.location.replace(url)
+      let div = e.target as HTMLDivElement
+      if(div.className === "rec-button") window.location.replace(url)
     }
 
-    const openSpan = (e: React.MouseEvent<HTMLButtonElement>)=>{
-      let button = e.currentTarget as HTMLButtonElement
-      let span = button.lastChild as HTMLSpanElement
+    const openSpan = (e: React.MouseEvent<HTMLDivElement>)=>{
+      let div = e.currentTarget as HTMLDivElement
+      let span = div.lastChild as HTMLSpanElement
       span?.classList.toggle("expanded")
     }
 
@@ -65,21 +67,21 @@ export default function App() {
       {urls.map((obj, i)=>{
         let filteredName = getName(obj.url)
 
-        return <button 
+        return <div 
           className='rec-button' 
           key={"rec-" + i} 
           onClick={(e)=>{clickRec(e, obj.url)}} 
           style={{backgroundColor: obj.background}}
         >
           {filteredName}
-          <button onClick={openSpan}>
+          <div onClick={openSpan}>
             <FontAwesomeIcon icon={faEllipsisVertical}/>
             <span className='rec-span'>
               <button onClick={()=>{console.log("edit " + filteredName)}}>Edit</button>
               <button onClick={()=>{console.log("remove " + filteredName)}}>Remove</button>
             </span>
-          </button>
-        </button>
+          </div>
+        </div>
       })}
       <button onClick={()=>{setPopUp(true)}}><FontAwesomeIcon icon={faPlus}/></button>
     </div>
