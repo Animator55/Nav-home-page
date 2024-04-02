@@ -1,11 +1,49 @@
 body {
   margin: 0;
   --cblack: #000000;
+  --cgrey: #3b3b3b;
 
 }
 
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.recomendation-section {
+  flex-direction: column;
+  display: flex;
+  width: 78%;
+  margin: 2rem 10%;
+}
+.recomendation-section > section {
+  display: flex;
+  gap: 2%;
+}
+.recomendation-section > section > div{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.rec-button[data-height="2"] {
+  min-height: 16.5rem!important;
+}
+
 .rec-button {
-  
+  position: relative;
+  background-color: var(--cgrey);
+  transform: skew(10px);
+}
+
+.span-container {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+
+.button-span {
+  background-color: transparent;
 }
 
 .rec-span {
@@ -14,6 +52,7 @@ body {
 
 .rec-span.expanded {
   display: block;
+  position: absolute;
 }
 
 .input-zone {
@@ -43,6 +82,13 @@ body {
   .pop {
     width: 85vw;
     padding: 2rem 0;
+  }
+
+  .recomendation-section {
+    grid-template-columns: 49% 49%;
+    gap: 2%;
+    width: 95%;
+    margin: 2rem 2.5%;
   }
 }
 
