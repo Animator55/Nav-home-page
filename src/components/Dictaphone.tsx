@@ -18,7 +18,7 @@ export default function Dictaphone({sendText}: Props) {
     sendText(text)
   }, [text])
 
-  return <div>
+  return <div className='dictaphone'>
     {hasRecognitionSupport ? 
         !active ?
             <button onClick={startListening}>

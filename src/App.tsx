@@ -1,10 +1,11 @@
 import React from 'react'
 import './App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
 import PopUp from './components/PopUp';
 import getName from './logic/getNameFromURL';
 import Dictaphone from './components/Dictaphone';
+import checkIfIsURL from './logic/checkIfIsURL';
 
 type links = {
   url: string
@@ -78,16 +79,33 @@ export default function App() {
   const [urls, setUrls] = React.useState<links[]>(urlsDef)
   const [popUp, setPopUp] = React.useState(false)
 
+  const submit = (e: React.FormEvent)=>{
+    e.preventDefault()
+    let input = e.currentTarget.firstChild as HTMLInputElement
+    if(checkIfIsURL(input.value)) {
+      window.location.href = "https://"+ input.value
+    }
+    else {
+      const encodedSearchTerm = encodeURIComponent(input.value);
+      window.location.href = `https://www.google.com/search?q=${encodedSearchTerm}`;
+    }
+  }
+
   const SearchInput = ()=>{
     return <div className='input-zone'>
-      <form action="http://google.com/search">
-        <input id='search-input' name='q' placeholder='Search something or URL'/>
-        <input type="hidden" name="sitesearch"/>
-      </form>
-      <Dictaphone sendText={(text: string)=>{
-        let input = document.getElementById("search-input") as HTMLInputElement
-        input.value = text
-      }}/>
+      <div className='input'>
+        <form onSubmit={submit}>
+          <div>
+            <input id='search-input' name='q' placeholder='Search something or URL'/>
+            <input type="hidden" name="sitesearch"/>
+            <Dictaphone sendText={(text: string)=>{
+              let input = document.getElementById("search-input") as HTMLInputElement
+              input.value = text
+            }}/>
+          </div>
+          <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
+        </form>
+      </div>
     </div>
   }
 
@@ -98,7 +116,7 @@ export default function App() {
 
     const clickRec = (e: React.MouseEvent, url: string)=>{
       let div = e.target as HTMLDivElement
-      if(div.className === "rec-button") window.location.replace(url)
+      if(div.className === "rec-button") window.location.href = url
     }
 
     const openSpan = (e: React.MouseEvent<HTMLButtonElement>)=>{
@@ -152,8 +170,7 @@ export default function App() {
             height: (display[i])*8+"rem",
           }}
         >
-          {i}
-          {/* {filteredName} */}
+          {filteredName}
           <div className='span-container'>
             <button className='button-open' onClick={openSpan}>
               <FontAwesomeIcon icon={faEllipsisVertical}/>
