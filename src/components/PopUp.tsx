@@ -1,8 +1,8 @@
 import React, { FormEvent } from "react"
 
-type Props = {confirm: Function}
+type Props = {confirm: Function, close: Function}
 
-export default function PopUp ({confirm}: Props){
+export default function PopUp ({confirm, close}: Props){
     const [error, setError] = React.useState("")
 
     const handler = (e: FormEvent<HTMLFormElement>)=>{
@@ -20,7 +20,10 @@ export default function PopUp ({confirm}: Props){
         confirm(url, background)
     }
 
-    return <section className='back-pop'>
+    return <section className='back-pop' onClick={(e)=>{
+      let target = e.target as HTMLDivElement
+      if(target.className === "back-pop") close()
+    }}>
       <form onSubmit={handler} className='pop'>
         <h3>New Shortcut</h3>
         <div>{error}</div>

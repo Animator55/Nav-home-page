@@ -1,17 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 body {
   margin: 0;
   --cblack: #000000;
-  --cgrey: #3b3b3b;
+  --cgrey: #263949;
+  --cgrey2:#2b4c68;
+  --cwhite: #e6dede;
+  
+  --cwhiteAlpha: #aec8e08c;
+  --cshadow: #3871a4;
+  --cbackground: #1e3346;
+  --clight: #96c1e9;
+}
 
+* {
+  font-family: "Ubuntu", sans-serif;
+}
+
+button {
+  background-color: transparent;
+  border: none;
 }
 
 ::-webkit-scrollbar {
   display: none;
 }
 
+input:focus {
+  outline: none;
+}
+
 .main {
   height: 100vh;
   overflow-y: scroll;
+  background-color: var(--cbackground);
 }
 .recomendation-section {
   flex-direction: column;
@@ -25,28 +47,48 @@ body {
 }
 .recomendation-section > section > div{
   display: flex;
-  width: 100%;
   flex-direction: column;
   gap: 0.5rem;
+  width: 49%;
 }
 .rec-button[data-height="2"] {
   min-height: 16.5rem!important;
 }
 
+.add-rec {
+  justify-content: center;
+  font-size: 2rem;
+}
+.add-rec:active {
+  outline: none;
+  background-color: var(--cgrey2);
+}
+
 .rec-button {
   position: relative;
   background-color: var(--cgrey);
-  transform: skew(10px);
+  color: var(--cwhite);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+.rec-button > h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0.5rem;
+  font-size: 2rem;
+  pointer-events: none;
 }
 
 .span-container {
   position: absolute;
-  top: 10%;
-  right: 10%;
+  top: 5%;
+  right: 5%;
 }
 
-.button-span {
-  background-color: transparent;
+.button-open {
+  font-size: 1.3rem;
+  color: var(--cwhite);
 }
 
 .rec-span {
@@ -56,6 +98,25 @@ body {
 .rec-span.expanded {
   display: block;
   position: absolute;
+  background-color: var(--cblack);
+  color: white;
+  right: 0;
+  top: 115%;
+  border-radius: 5px;
+}
+.rec-span::after {
+  content: "";
+  position: absolute;
+  background-color: var(--cblack);
+  rotate: 45deg;
+  right: 4%;
+  top: -6%;
+  width: 15%;
+  height: 15%;
+}
+.rec-span.expanded > button {
+  color: var(--cwhite);
+  margin: 0.5rem 0.3rem;
 }
 
 .input-zone {
@@ -78,30 +139,34 @@ body {
 .input > form > div {
   width: 100%;
   display: flex;
-  border-radius: 7px;
+  border-radius: 15px;
   backdrop-filter: blur(5px);
-  border: 1px solid;
-  background: #ffffff66;
+  box-shadow: 0 0 10px var(--cshadow);
+  border: 2px solid var(--clight);
+  background: var(--cwhiteAlpha);
   position: relative;
 }
 #search-input {
-  width: 100%;
+  width: calc(100% - 3.2rem);
   padding: 1rem;
-  background-color: transparent;
+  background: var(--cwhiteAlpha)!important;
+  border: 1px solid var(--cgrey);
+  border-radius: 5px;
   font-size: 1.2rem;
   border: none;
 }
 .dictaphone {
-  position: absolute;
-  right: 0;
-  top: 0;
   height: 100%;
 }
-.dictaphone > button {
+.dictaphone > button, .search-button {
   height: 100%;
-}
-.search-button {
+  padding: 0 0.8rem;
   background-color: transparent;
+  font-size: 1.2rem;
+  border: none;
+  color: var(--cbackground);
+  display: flex;
+  align-items: center;
 }
 
 /**/
@@ -110,6 +175,7 @@ body {
   position: fixed;
   backdrop-filter: blur(1px);
   inset: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;

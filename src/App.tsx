@@ -6,6 +6,7 @@ import PopUp from './components/PopUp';
 import getName from './logic/getNameFromURL';
 import Dictaphone from './components/Dictaphone';
 import checkIfIsURL from './logic/checkIfIsURL';
+import contrastColor from './logic/contrastColor';
 
 type links = {
   url: string
@@ -13,46 +14,6 @@ type links = {
 }
 
 const urlsDef: links[] = [
-  {
-    url: "https://www.youtube.com",
-    background: "#FF0000",
-  },
-  {
-    url: "https://www.amazon.com",
-    background: "#febd69",
-  },
-  {
-    url: "https://www.twitch.tv",
-    background: "#6441a5",
-  },
-  {
-    url: "https://discord.com",
-    background: "#5865F2",
-  },
-  {
-    url: "https://weather.com",
-    background: "#005986",
-  },
-  {
-    url: "https://www.youtube.com",
-    background: "#FF0000",
-  },
-  {
-    url: "https://www.amazon.com",
-    background: "#febd69",
-  },
-  {
-    url: "https://www.twitch.tv",
-    background: "#6441a5",
-  },
-  {
-    url: "https://discord.com",
-    background: "#5865F2",
-  },
-  {
-    url: "https://weather.com",
-    background: "#005986",
-  },
   {
     url: "https://www.youtube.com",
     background: "#FF0000",
@@ -81,7 +42,8 @@ export default function App() {
 
   const submit = (e: React.FormEvent)=>{
     e.preventDefault()
-    let input = e.currentTarget.firstChild as HTMLInputElement
+    let input = e.currentTarget.firstChild!.firstChild as HTMLInputElement
+    if(!input.value || input.value === "") return
     if(checkIfIsURL(input.value)) {
       window.location.href = "https://"+ input.value
     }
@@ -96,14 +58,13 @@ export default function App() {
       <div className='input'>
         <form onSubmit={submit}>
           <div>
-            <input id='search-input' name='q' placeholder='Search something or URL'/>
-            <input type="hidden" name="sitesearch"/>
+            <button className="search-button" style={{pointerEvents: "none"}}><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
+            <input id='search-input' name='q' placeholder='Search'/>
             <Dictaphone sendText={(text: string)=>{
               let input = document.getElementById("search-input") as HTMLInputElement
               input.value = text
             }}/>
           </div>
-          <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
         </form>
       </div>
     </div>
@@ -121,7 +82,7 @@ export default function App() {
 
     const openSpan = (e: React.MouseEvent<HTMLButtonElement>)=>{
       let div = e.currentTarget as HTMLButtonElement
-      let span = div.lastChild as HTMLSpanElement
+      let span = div.nextSibling as HTMLSpanElement
       span?.classList.toggle("expanded")
     }
 
@@ -129,7 +90,8 @@ export default function App() {
     const AddButton = (index: number)=>{
       isButton = false
       return <div 
-        className='rec-button' 
+        className='rec-button add-rec'
+        key={Math.random()} 
         onClick={()=>{setPopUp(true)}} 
         style={{
           height: (display[index])*8+"rem",
@@ -141,6 +103,8 @@ export default function App() {
     const Placeholder = (index: number)=>{
       return <div 
         className='rec-button' 
+        key={Math.random()} 
+        data-height={`${display[index]}`}
         style={{
           height: (display[index])*8+"rem",
         }}
@@ -162,17 +126,18 @@ export default function App() {
   
         jsx[i < 4 ? 0 : 1].push(obj ? <div 
           className='rec-button' 
-          key={"rec-" + i + " " + j} 
+          key={Math.random()} 
           onClick={(e)=>{clickRec(e, obj.url)}} 
           data-height={`${display[i]}`}
           style={{
             backgroundColor: obj.background,
+            color: contrastColor(obj.background),
             height: (display[i])*8+"rem",
           }}
         >
-          {filteredName}
+          <h1>{filteredName}</h1>
           <div className='span-container'>
-            <button className='button-open' onClick={openSpan}>
+            <button className='button-open' style={{color: contrastColor(obj.background)}} onClick={openSpan}>
               <FontAwesomeIcon icon={faEllipsisVertical}/>
             </button>
             <span className='rec-span'>
@@ -185,21 +150,7 @@ export default function App() {
       }
     }
 
-    if(isButton) {
-      jsx[0].push(AddButton(jsx.length))
-
-    }
-
-    // for(let j=index; j<2; j++ ) {
-
-    //   for(let k=urls.length%7;k<7;k++) {
-
-    //     let filteredIndex = k-7*(Math.floor(urls.length/7))
-
-    //     if(k === urls.length%7) jsx[j].push(AddButton(filteredIndex))
-    //     else jsx[j].push(Placeholder(filteredIndex))
-    //   }
-    // }
+    if(isButton) jsx[0].push(AddButton(jsx.length))
 
     return <div className='recomendation-section'>
       <section>        
@@ -216,12 +167,13 @@ export default function App() {
   // functions
 
   const addUrl = (url:string, background:string) =>{
+    console.log(url, background)
     setUrls([...urls, {url: url, background: background}])
     setPopUp(false)
   }
 
   return <section className='main'>
-    {popUp && <PopUp confirm={addUrl}/>}
+    {popUp && <PopUp close={()=>{setPopUp(false)}} confirm={addUrl}/>}
     <SearchInput/>
     <Recommended/>
   </section>
