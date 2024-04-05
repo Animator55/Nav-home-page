@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical, faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faGlobe, faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons';
 import PopUp from './components/PopUp';
 import getName from './logic/getNameFromURL';
 import Dictaphone from './components/Dictaphone';
@@ -19,16 +19,16 @@ const urlsDef: links[] = [
     background: "#FF0000",
   },
   {
-    url: "https://www.amazon.com",
-    background: "#febd69",
-  },
-  {
     url: "https://www.twitch.tv",
     background: "#6441a5",
   },
   {
     url: "https://discord.com",
     background: "#5865F2",
+  },
+  {
+    url: "https://www.amazon.com",
+    background: "#febd69",
   },
   {
     url: "https://weather.com",
@@ -39,10 +39,11 @@ const urlsDef: links[] = [
 export default function App() {
   const [urls, setUrls] = React.useState<links[]>(urlsDef)
   const [popUp, setPopUp] = React.useState(false)
+  const [lang, setLang] = React.useState("en-US")
 
   const submit = (e: React.FormEvent)=>{
     e.preventDefault()
-    let input = e.currentTarget.firstChild!.firstChild as HTMLInputElement
+    let input = document.getElementById("search-input") as HTMLInputElement
     if(!input.value || input.value === "") return
     if(checkIfIsURL(input.value)) {
       window.location.href = "https://"+ input.value
@@ -60,10 +61,13 @@ export default function App() {
           <div>
             <button className="search-button" style={{pointerEvents: "none"}}><FontAwesomeIcon icon={faMagnifyingGlass}/></button>
             <input id='search-input' name='q' placeholder='Search'/>
+            <button className='lang-button' data-lang={lang.split("-")[1]} onClick={()=>{
+              setLang(lang === "en-US" ? "es-ES" : "en-US") 
+            }}><FontAwesomeIcon icon={faGlobe}/></button>
             <Dictaphone sendText={(text: string)=>{
               let input = document.getElementById("search-input") as HTMLInputElement
               input.value = text
-            }}/>
+            }} lang={lang}/>
           </div>
         </form>
       </div>
@@ -119,20 +123,21 @@ export default function App() {
     let loopIterations = Math.floor(urls.length/7) + 1
     
     for(let j=0; j<loopIterations;j++) {
-      for(let i=0; i < display.length; i++) {
+      for(let i=display.length*j; i < display.length*j+display.length; i++) {
         let obj = urls[i]
         let filteredName: string | undefined = undefined
         if(obj) filteredName = getName(obj.url)
+
   
-        jsx[i < 4 ? 0 : 1].push(obj ? <div 
+        jsx[i-display.length*j < 4 ? 0 : 1].push(obj ? <div 
           className='rec-button' 
           key={Math.random()} 
           onClick={(e)=>{clickRec(e, obj.url)}} 
-          data-height={`${display[i]}`}
+          data-height={`${display[i-display.length*j]}`}
           style={{
             backgroundColor: obj.background,
             color: contrastColor(obj.background),
-            height: (display[i])*8+"rem",
+            height: (display[i-display.length*j])*8+"rem",
           }}
         >
           <h1>{filteredName}</h1>
@@ -141,11 +146,11 @@ export default function App() {
               <FontAwesomeIcon icon={faEllipsisVertical}/>
             </button>
             <span className='rec-span'>
-              <button onClick={()=>{console.log("edit " + filteredName)}}>Edit</button>
-              <button onClick={()=>{console.log("remove " + filteredName)}}>Remove</button>
+              {/* <button onClick={()=>{console.log("edit " + filteredName)}}>Edit</button> */}
+              <button onClick={()=>{removeURL(i)}}>Remove</button>
             </span>
           </div>
-        </div>: isButton ? AddButton(i) : Placeholder(i)
+        </div>: isButton ? AddButton(i-display.length*j) : Placeholder(i-display.length*j)
         )
       }
     }
@@ -170,6 +175,9 @@ export default function App() {
     console.log(url, background)
     setUrls([...urls, {url: url, background: background}])
     setPopUp(false)
+  }
+  const removeURL = (index: number) =>{
+    setUrls(urls.filter((el, i)=>{if(i !== index) return el}))
   }
 
   return <section className='main'>

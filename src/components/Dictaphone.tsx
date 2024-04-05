@@ -3,16 +3,16 @@ import useSpeech from '../logic/UseSpeech'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMicrophone, faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons'
 
-type Props = {sendText: Function}
+type Props = {sendText: Function, lang: string}
 
-export default function Dictaphone({sendText}: Props) {
+export default function Dictaphone({sendText, lang}: Props) {
   const {
     text, 
     startListening, 
     stopListening, 
     active,
     hasRecognitionSupport
-  } = useSpeech()
+  } = useSpeech(lang)
 
   React.useEffect(()=>{
     sendText(text)

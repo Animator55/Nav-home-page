@@ -4,18 +4,18 @@ let recognition: any = null
 if ("webkitSpeechRecognition" in window) {
   recognition = new webkitSpeechRecognition()
   recognition.continuous = true
-  recognition.lang = "en-US"
 }
 
-export default function useSpeech() {
+export default function useSpeech(lang: string) {
   const [text, setText] = React.useState("")
   const [active, setActive] = React.useState(false)
 
   React.useEffect(() => {
     if (!recognition) return
 
+    recognition.lang = lang
+
     recognition.onresult = (e: SpeechRecognitionEvent) => {
-      console.log(e)
       recognition.stop()
       setActive(false)
       setText(e.results[0][0].transcript)

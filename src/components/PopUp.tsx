@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react"
+import checkIfIsURL from "../logic/checkIfIsURL"
 
 type Props = {confirm: Function, close: Function}
 
@@ -9,8 +10,7 @@ export default function PopUp ({confirm, close}: Props){
         e.preventDefault()
         let input = e.currentTarget[0] as HTMLInputElement
         let url = input.value
-        console.log(url.search("."))
-        if(url.search(".") === -1) return setError("Invalid URL")
+        if(!checkIfIsURL(url)) return setError("Invalid URL")
 
         if(url.search("https://") === -1) url = "https://"+ url
 

@@ -71,6 +71,7 @@ input:focus {
   border-radius: 5px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .rec-button > h1 {
   overflow: hidden;
@@ -158,7 +159,7 @@ input:focus {
 .dictaphone {
   height: 100%;
 }
-.dictaphone > button, .search-button {
+.dictaphone > button, .search-button, .lang-button {
   height: 100%;
   padding: 0 0.8rem;
   background-color: transparent;
@@ -167,6 +168,15 @@ input:focus {
   color: var(--cbackground);
   display: flex;
   align-items: center;
+}
+
+.lang-button {
+  position: relative;
+}
+.lang-button::after {
+  content: attr(data-lang);
+  margin-left: 0.25rem;
+  color: var(--cbackground);
 }
 
 /**/
@@ -182,7 +192,7 @@ input:focus {
 }
 
 .pop {
-  background-color: var(--cblack);
+  background-color: var(--clight);
   padding: 2rem;
   display: flex;
   flex-direction: column;
